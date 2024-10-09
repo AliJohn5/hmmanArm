@@ -37,7 +37,7 @@ for i in range(n):
     fk_solution = robot_chain.forward_kinematics(ang)
     data = get_position_and_rotation(fk_solution)
     print(ang[0],ang[1],ang[2],ang[3],ang[4]
-        ,data['x'],data['y'],data['y'],
+        ,data['x'],data['y'],data['z'],
         data['roll'],data['pitch'],data['yaw'],
         file=file)
     
