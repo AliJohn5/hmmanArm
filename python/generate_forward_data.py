@@ -1,10 +1,8 @@
 import numpy as np
 import random
-import ikpy
 from ikpy.chain import Chain
-from ikpy.link import OriginLink, URDFLink
 import numpy as np
-
+from robot import robot_chain
 
 def get_position_and_rotation(fk_solution):
     x = fk_solution[0, 3]
@@ -29,15 +27,7 @@ def generate_random_angles():
     angles.append(0.0)
     return angles
 
-robot_chain = Chain.from_urdf_file("../design/robot.urdf",active_links_mask=[
-    True,
-    True,
-    True,
-    True,
-    True,
-    True,
 
-])
 file = open("../outin/forward.txt","w")
 n = 10000
 print(n,file=file)
