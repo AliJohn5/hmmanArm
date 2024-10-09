@@ -45,16 +45,22 @@ enable_testing()
 add_executable(hello_world_test tests/hello_world_test.cpp)
 add_executable(prod_test tests/prod_test.cpp)
 add_executable(forward_test tests/forward_test.cpp)
+add_executable(forward_test2 tests/forward_test2.cpp)
+
 
 
 
 target_link_libraries(hello_world_test hummanArm stdc++)
 target_link_libraries(prod_test hummanArm stdc++)
 target_link_libraries(forward_test hummanArm stdc++)
+target_link_libraries(forward_test2 hummanArm stdc++)
+
 
 
 
 add_test(NAME hello_world_test COMMAND hello_world_test)
 add_test(NAME prod_test COMMAND prod_test)
 add_test(NAME forward_test COMMAND forward_test)
+add_test(NAME forward_test2 COMMAND forward_test2)
+
 

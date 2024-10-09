@@ -3,11 +3,11 @@
 int main()
 {
     Vec ang_rad = {
-        M_PI / 4,
-        M_PI / 6,
-        M_PI / 2,
-        M_PI / 4,
-        M_PI / 2};
+        0,
+        0,
+        0,
+        0,
+        0};
 
     Mat result = forward(ang_rad);
     std::cout << "Final Transformation Matrix:\n";

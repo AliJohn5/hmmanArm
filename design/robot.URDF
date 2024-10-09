@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<robot name="robot">
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.1 0.1"/> <!-- A simple cube for visualization -->
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  
+
+
+
+  <!-- Link 1 -->
+  <link name="link_1">
+    <visual>
+      <origin xyz="0 0 0.03325" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.0665"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Joint 2: Rotates around X-axis -->
+  
+
+  <!-- Link 2 -->
+  <link name="link_2">
+    <visual>
+      <origin xyz="0.1679 0 0" rpy="0 0 0"/> <!-- Half of 335.8mm -->
+      <geometry>
+        <cylinder radius="0.05" length="0.3358"/> <!-- Link length 335.8 mm -->
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Joint 3: Rotates around X-axis -->
+  
+
+  <!-- Link 3 -->
+  <link name="link_3">
+    <visual>
+      <origin xyz="0.0915 0 0" rpy="0 0 0"/> <!-- Half of 183mm -->
+      <geometry>
+        <cylinder radius="0.05" length="0.183"/> <!-- Link length 183 mm -->
+      </geometry>
+      <material name="yellow">
+        <color rgba="1 1 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Joint 4: Rotates around Z-axis -->
+  
+
+  <!-- Link 4 -->
+  <link name="link_4">
+    <visual>
+      <origin xyz="0 0 0.0275" rpy="0 0 0"/> <!-- Half of 55mm -->
+      <geometry>
+        <cylinder radius="0.05" length="0.055"/> <!-- Link length 55 mm -->
+      </geometry>
+      <material name="purple">
+        <color rgba="0.5 0 0.5 1"/>
+      </material>
+    </visual>
+  </link>
+
+<link name="link_5">
+<visual>
+    <origin xyz="0 0 0.035" rpy="0 0 0" /> <!-- Half of 70mm -->
+    <geometry>
+        <cylinder radius="0.05" length="0.07" /> <!-- Link length 70 mm -->
+    </geometry>
+    <material name="orange">
+        <color rgba="1 0.5 0 1" />
+    </material>
+</visual>
+</link>
+
+<joint name="joint_1" type="revolute">
+    <parent link="base_link" />
+    <child link="link_1" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    
+</joint>
+
+<joint name="joint_2" type="revolute">
+    <parent link="link_1" />
+    <child link="link_2" />
+    <origin xyz="0 0 0.0665" rpy="0 0 0" />
+    <axis xyz="1 0 0" /> <!-- Rotation around X-axis -->
+</joint>
+
+<joint name="joint_3" type="revolute">
+    <parent link="link_2" />
+    <child link="link_3" />
+    <origin xyz="0 0 0.3358" rpy="0 0 0" />
+    <axis xyz="1 0 0" /> <!-- Rotation around X-axis -->
+</joint>
+
+<joint name="joint_4" type="revolute">
+    <parent link="link_3" />
+    <child link="link_4" />
+    <origin xyz="0 0 0.183" rpy="0 0 0" />
+    <axis xyz="0 0 1" /> <!-- Rotation around Z-axis -->
+</joint>
+
+  <joint name="joint_5" type="revolute">
+    <parent link="link_4"/>
+    <child link="link_5"/>
+    <origin xyz="0 0 0.055" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/> <!-- Rotation around Z-axis -->
+  </joint>
+
+  <!-- Link 5 -->
+ 
+
+</robot>
