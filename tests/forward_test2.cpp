@@ -26,9 +26,9 @@ int main()
         // printPos(temp);
         // return 0;
 
-        dif = std::max(dif, (float)abs(ans.x / 1000.0 - temp.x));
-        dif = std::max(dif, (float)abs(ans.y / 1000.0 - temp.y));
-        dif = std::max(dif, (float)abs(ans.z / 1000.0 - temp.z));
+        dif = std::max(dif, (float)abs(ans.x  - temp.x));
+        dif = std::max(dif, (float)abs(ans.y  - temp.y));
+        dif = std::max(dif, (float)abs(ans.z  - temp.z));
         dif = std::max(dif, (float)abs(ans.pitch - temp.pitch));
         dif = std::max(dif, (float)abs(ans.yaw - temp.yaw));
         dif = std::max(dif, (float)abs(ans.roll - temp.roll));

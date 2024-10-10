@@ -75,11 +75,11 @@ Mat forward(Vec ang_rad)
     {
         ans = ans * RXM(ang_rad[1]) * TXM(links[1]);
     }
+
     if (ang_rad.size() > 2)
     {
         ans = ans * RXM(ang_rad[2]) * TXM(links[2]);
     }
-
     if (ang_rad.size() > 3)
     {
         ans = ans * RZM(ang_rad[3]) * TZM(links[3]);
@@ -89,28 +89,41 @@ Mat forward(Vec ang_rad)
     {
         ans = ans * RXM(ang_rad[4]) * TXM(links[4]);
     }
-
+    /*
+     */
     return ans;
 }
 
-Position getPosition(const Mat &transform)
+Position getPosition(const Mat &matrix)
 {
-    Position pos;
+    if (matrix.size() != 4 || matrix[0].size() != 4)
+    {
+        throw std::runtime_error("Matrix must be 4x4.");
+    }
 
-    pos.x = transform[0][3];
-    pos.y = transform[1][3];
-    pos.z = transform[2][3];
+    Position pose;
 
-    float R[3][3] = {
-        {transform[0][0], transform[0][1], transform[0][2]},
-        {transform[1][0], transform[1][1], transform[1][2]},
-        {transform[2][0], transform[2][1], transform[2][2]}};
+    pose.x = matrix[0][3];
+    pose.y = matrix[1][3];
+    pose.z = matrix[2][3];
 
-    pos.yaw = atan2(R[1][0], R[0][0]);
-    pos.pitch = asin(-R[2][0]);
-    pos.roll = atan2(R[2][1], R[2][2]);
+    Vec R1 = matrix[0];
+    Vec R2 = matrix[1];
+    Vec R3 = matrix[2];
 
-    return pos;
+    pose.pitch = atan2(-R3[0], sqrt(R1[0] * R1[0] + R2[0] * R2[0]));
+    if (cos(pose.pitch) != 0)
+    {
+        pose.roll = atan2(R2[2], R1[2]);
+        pose.yaw = atan2(R1[1], R1[0]);
+    }
+    else
+    {
+        pose.roll = 0;
+        pose.yaw = atan2(-R2[0], R3[0]);
+    }
+
+    return pose;
 }
 
 Mat operator*(const Mat &a, const Mat &b)

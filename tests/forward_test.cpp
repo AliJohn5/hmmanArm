@@ -2,22 +2,24 @@
 
 int main()
 {
+
     Vec ang_rad = {
-        0,
-        0,
-        0,
-        0,
-        0};
+        +M_PI_2,
+        1,
+        -1,
+        -1,
+        +1};
 
     Mat result = forward(ang_rad);
-    std::cout << "Final Transformation Matrix:\n";
+    // std::cout << "Final Transformation Matrix:\n";
 
     printMat(result);
 
-    std::cout << "Final Position:\n";
+    // std::cout << "Final Position for:" << i << " ,"<<j << " \n";
 
     Position pos = getPosition(result);
 
     printPos(pos);
-    return 0;
+
+return 0;
 }
