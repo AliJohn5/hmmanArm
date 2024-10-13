@@ -8,7 +8,7 @@ robot_chain = Chain(name='robot', links=[
                 origin_translation=[0, 0, 0.0],
 
                 origin_orientation=[0, 0, 0],
-                rotation=[0, 0, 0],
+                rotation=[0, 0, 1],
 
             ),
 
@@ -16,41 +16,49 @@ robot_chain = Chain(name='robot', links=[
                 name="link_1",
                 origin_translation=[0, 0, 66.5],
                 origin_orientation=[0,0,0],
-                rotation=[0, 0, 1], 
+                rotation=[0, 1, 0], 
 
             ),
             URDFLink(
                 name="link_2",
-                origin_translation=[335.8, 0, 0], 
+                origin_translation=[0, 0, 335.8], 
                 origin_orientation=[0, 0, 0],
-                rotation=[1, 0, 0], 
+                rotation=[0, 1, 0], 
                  
             ),
 
             URDFLink(
                 name="link_3",
-                origin_translation=[183, 0.0, 0], 
+                origin_translation=[0, 0.0, 183], 
                 origin_orientation=[0, 0, 0],
-                rotation=[1, 0, 0],  
+                rotation=[0, 0, 1],  
             ),
             URDFLink(
                 name="link_4",
                 origin_translation=[0.0, 0, 55], 
                 origin_orientation=[0, 0, 0],
-                rotation=[0, 0, 1],  
+                rotation=[0, 1, 0],  
             ),
 
-            URDFLink(
+
+             
+             URDFLink(
                 name="link_5",
-                origin_translation=[70, 0, 0], 
+                origin_translation=[0, 0, 70], 
                 origin_orientation=[0, 0, 0],
-                rotation=[1, 0, 0],  
-            ), 
+                rotation=[0, 0, 0],  
+            ),
                
 
 
         ])
 
+
+'''
+ 
+
+             
+'''
 
 
 

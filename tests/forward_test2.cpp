@@ -2,6 +2,15 @@
 
 int main()
 {
+    if (WIN32)
+    {
+        system("py ../python/generate_forward_data.py");
+    }
+    else
+    {
+        system("python3 ../python/generate_forward_data.py");
+    }
+
     freopen("../outin/forward.txt", "r", stdin);
     int n;
     std::cin >> n;
@@ -26,12 +35,21 @@ int main()
         // printPos(temp);
         // return 0;
 
-        dif = std::max(dif, (float)abs(ans.x  - temp.x));
-        dif = std::max(dif, (float)abs(ans.y  - temp.y));
-        dif = std::max(dif, (float)abs(ans.z  - temp.z));
+        dif = std::max(dif, (float)abs(ans.x - temp.x));
+        dif = std::max(dif, (float)abs(ans.y - temp.y));
+        dif = std::max(dif, (float)abs(ans.z - temp.z));
         dif = std::max(dif, (float)abs(ans.pitch - temp.pitch));
         dif = std::max(dif, (float)abs(ans.yaw - temp.yaw));
         dif = std::max(dif, (float)abs(ans.roll - temp.roll));
+
+        if (dif > 1)
+        {
+            for (auto &x : v)
+                std::cout << x << " ";
+            std::cout << '\n';
+
+            exit(-1);
+        }
     }
 
     std::cout << dif << std::endl;
