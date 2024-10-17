@@ -18,7 +18,7 @@ int main()
 
     for (size_t i = 0; i < n; i++)
     {
-        Vec v(5);
+        Ang v;
         for (auto &x : v)
             std::cin >> x;
         Position temp;

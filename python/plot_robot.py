@@ -6,29 +6,27 @@ from robot import get_position_and_rotation
 
 
 
-fk_solution = [40.506,-43.3206,-6.309]
+fk_solution = [0,0,710]
 ori = [0,0,0]
-s = [-3.03339, 1.01789 ,-2.89209, -2.53319, -0.157093,0]
+s = [2.9361 ,-1.10791, 2.55291, -3.11372, 2.71204, 0]
 
 fk = robot_chain.forward_kinematics(s)
+target_or = [
+    [0.751702 ,-0.334921 ,-0.56813],
+    [-0.319699, -0.938521, 0.130273 ],
+    [-0.576833, 0.083704, -0.812562 ],
+    ]
+target = [-395.192,83.2015,43.1121]
 
-target =  [40.506,-43.3206,-6.309]
-ik_solution = robot_chain.inverse_kinematics(target)
 
-#fk = robot_chain.forward_kinematics(ik_solution)
+ik_solution = robot_chain.inverse_kinematics(target,target_orientation=target_or,orientation_mode='all')
 
+fk = robot_chain.forward_kinematics(ik_solution)
 
-print(fk)
-print("{")
-for i in fk:
-    print("{")
-    for j in i:
-        print(j,end=" ,")
-    print("}")
-
-print("}")
 
 print(fk)
+
+print(ik_solution)
 
 def plot_robot(chain, joint_angles):
     fig, ax = plot_utils.init_3d_figure()

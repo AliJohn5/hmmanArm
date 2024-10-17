@@ -10,6 +10,8 @@ add_library(hummanArm
     include/hummanArm/hello_world.hpp
     include/hummanArm/math.hpp
     include/hummanArm/data.hpp
+    include/hummanArm/debug.hpp
+
 
 
 
@@ -50,6 +52,7 @@ add_executable(createDataBase tests/createDataBase.cpp)
 add_executable(RobotRead tests/RobotRead.cpp)
 add_executable(inverse_test tests/inverse_test.cpp)
 add_executable(list_inverse_test tests/list_inverse_test.cpp)
+add_executable(generate_inverse_test tests/generate_inverse_test.cpp)
 
 
 
@@ -66,6 +69,7 @@ target_link_libraries(createDataBase hummanArm stdc++)
 target_link_libraries(RobotRead hummanArm stdc++)
 target_link_libraries(inverse_test hummanArm stdc++)
 target_link_libraries(list_inverse_test hummanArm stdc++)
+target_link_libraries(generate_inverse_test hummanArm stdc++)
 
 
 
@@ -81,7 +85,7 @@ add_test(NAME forward_test2 COMMAND forward_test2)
 add_test(NAME createDataBase COMMAND createDataBase)
 add_test(NAME RobotRead COMMAND RobotRead)
 add_test(NAME inverse_test COMMAND inverse_test)
-add_test(NAME list_inverse_test COMMAND list_inverse_test)
+add_test(NAME generate_inverse_test COMMAND generate_inverse_test)
 
 
 

@@ -3,7 +3,7 @@
 int main()
 {
 
-    Vec ang_rad = {
+    Ang ang_rad = {
         M_PI_4,
         M_PI_4,
         M_PI_4,
