@@ -3,7 +3,6 @@
 
 int main()
 {
-
     std::cout << "starting read" << std::endl;
     Robot r;
     std::cout << "starting ik.." << std::endl;
@@ -15,7 +14,7 @@ int main()
 
     while (microsec < 1000000)
     {
-        Ang ik = r.ik(10, -5, 160, {{1, 1, 1}}, OrintationMode::x)[0];
+        Mat ik = r.fk(Ang({0, 0, 0, 0, 0}));
         ++i;
 
         finish = std::chrono::high_resolution_clock::now();

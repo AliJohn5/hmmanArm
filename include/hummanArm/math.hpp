@@ -6,14 +6,12 @@
 #include <math.h>
 #include <iostream>
 #include <fstream>
-#include <queue>
-#include <random>
 #include "hummanArm/debug.hpp"
 
 Mat operator*(const Mat &a, const Mat &b);
 bool operator==(const Mat &a, const Mat &b);
 
-const float links[5] = {66.5, 335.8, 183, 55, 70};
+const double links[5] = {66.5, 335.8, 183, 55, 70};
 
 const Mat IDEN = {
     Vec({1, 0, 0, 0}),
@@ -25,19 +23,23 @@ const Mat IDEN = {
 
 #define HI(a) std::cout << "HI" << (a) << '\n'
 
-Mat RXM(float ang_rad);
-Mat RYM(float ang_rad);
-Mat RZM(float ang_rad);
-Mat TXM(float dist_in_mm);
-Mat TYM(float dist_in_mm);
-Mat TZM(float dist_in_mm);
+Mat RXM(double ang_rad);
+Mat RYM(double ang_rad);
+Mat RZM(double ang_rad);
+Mat TXM(double dist_in_mm);
+Mat TYM(double dist_in_mm);
+Mat TZM(double dist_in_mm);
+
+Mat RTXM(double ang_rad, double dist_in_mm);
+Mat RTYM(double ang_rad, double dist_in_mm);
+Mat RTZM(double ang_rad, double dist_in_mm);
 
 Mat forwardS(Ang ang_rad, int iter);
 Mat forward(Ang ang_rad);
 
 Position getPosition(const Mat &tran_mat);
 Mat getMat(const Position &pos);
-float to_deg(float a);
+double to_deg(double a);
 
 void Best(
     Ang &old_ang,
@@ -46,9 +48,11 @@ void Best(
     Position &cur_pos,
     const Position &tar_pos);
 
-float dist(const Position &a, const Position &b);
-float dist(const Position &a, const Mat &b);
-float dist(const Mat &a, const Mat &b);
+double dist(const Position &a, const Position &b);
+double dist(const Position &a, const Mat &b);
+double dist(const Mat &a, const Mat &b);
+
+void generateForwardFunction();
 
 struct Node
 {
@@ -59,7 +63,7 @@ struct Node
 
 class Robot
 {
-    float k = 25 * M_PI / 180;
+    double k = 25 * M_PI / 180;
     int min_x = -700;
     int min_y = -700;
     int min_z = -700;
@@ -68,7 +72,7 @@ class Robot
     int max_z = 700;
     std::vector<Ang> angels;
     Mat _mat, _mat4, _mat2, _d, ans;
-    float _r, _s;
+    double _r, _s;
 
     void recThata1(Ang &ang);
     void recThata2(Ang &ang);
@@ -81,10 +85,10 @@ public:
     Mat fk(Ang ang);
     std::vector<Ang> ik(Mat mat);
     std::vector<Ang> ik(
-        float x,
-        float y,
-        float z,
-        std::vector<std::vector<float>> target_orintation,
+        double x,
+        double y,
+        double z,
+        std::vector<std::vector<double>> target_orintation,
         OrintationMode orintationMode);
 };
 

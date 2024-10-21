@@ -32,7 +32,7 @@ def plot_robot(chain, joint_angles):
     fig, ax = plot_utils.init_3d_figure()
     fig.set_figheight(9)  
     fig.set_figwidth(13) 
-    robot_chain.plot(s, ax, target=target,)
+    robot_chain.plot(ik_solution, ax, target=target,)
     plt.xlim(-800, 800)
     plt.ylim(-800, 800)
     ax.set_zlim(-900, 900)

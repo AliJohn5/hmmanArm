@@ -10,7 +10,7 @@ int main()
 
     Robot r;
 
-    float d = 0;
+    double d = 0;
     int err = 0;
 
     for (size_t i = 0; i < n; i++)

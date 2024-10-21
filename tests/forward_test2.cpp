@@ -2,19 +2,19 @@
 
 int main()
 {
-    if (WIN32)
-    {
-        system("py ../python/generate_forward_data.py");
-    }
-    else
-    {
-        system("python3 ../python/generate_forward_data.py");
-    }
+#ifdef _WIN32
+
+    system("py ../python/generate_forward_data.py");
+
+#else
+
+    system("python3 ../python/generate_forward_data.py");
+#endif
 
     freopen("../outin/forward.txt", "r", stdin);
     int n;
     std::cin >> n;
-    float dif = 0;
+    double dif = 0;
 
     for (size_t i = 0; i < n; i++)
     {
@@ -35,17 +35,19 @@ int main()
         // printPos(temp);
         // return 0;
 
-        dif = std::max(dif, (float)abs(ans.x - temp.x));
-        dif = std::max(dif, (float)abs(ans.y - temp.y));
-        dif = std::max(dif, (float)abs(ans.z - temp.z));
-        dif = std::max(dif, (float)abs(ans.pitch - temp.pitch));
-        dif = std::max(dif, (float)abs(ans.yaw - temp.yaw));
-        dif = std::max(dif, (float)abs(ans.roll - temp.roll));
+        dif = std::max(dif, (double)abs(ans.x - temp.x));
+        dif = std::max(dif, (double)abs(ans.y - temp.y));
+        dif = std::max(dif, (double)abs(ans.z - temp.z));
+        dif = std::max(dif, (double)abs(ans.pitch - temp.pitch));
+        dif = std::max(dif, (double)abs(ans.yaw - temp.yaw));
+        dif = std::max(dif, (double)abs(ans.roll - temp.roll));
 
         if (dif > 1)
         {
+            std::cout << i << '\n';
             for (auto &x : v)
-                std::cout << x << " ";
+                std::cout
+                    << x << " ";
             std::cout << '\n';
 
             exit(-1);

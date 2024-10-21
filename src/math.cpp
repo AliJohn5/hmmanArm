@@ -1,7 +1,33 @@
 
 #include "hummanArm/math.hpp"
 
-Mat RXM(float ang_rad)
+Mat RTXM(double ang_rad, double dist_in_mm)
+{
+    return {Vec({1, 0, 0, dist_in_mm}),
+            Vec({0, cos(ang_rad), -sin(ang_rad), 0}),
+            Vec({0, sin(ang_rad), cos(ang_rad), 0}),
+            Vec({0, 0, 0, 1})};
+}
+
+Mat RTYM(double ang_rad, double dist_in_mm)
+{
+    return {
+        Vec({cos(ang_rad), 0, sin(ang_rad), 0}),
+        Vec({0, 1, 0, dist_in_mm}),
+        Vec({-sin(ang_rad), 0, cos(ang_rad), 0}),
+        Vec({0, 0, 0, 1})};
+}
+
+Mat RTZM(double ang_rad, double dist_in_mm)
+{
+    return {
+        Vec({cos(ang_rad), -sin(ang_rad), 0, 0}),
+        Vec({sin(ang_rad), cos(ang_rad), 0, 0}),
+        Vec({0, 0, 1, dist_in_mm}),
+        Vec({0, 0, 0, 1})};
+}
+
+Mat RXM(double ang_rad)
 {
     return {Vec({1, 0, 0, 0}),
             Vec({0, cos(ang_rad), -sin(ang_rad), 0}),
@@ -9,7 +35,7 @@ Mat RXM(float ang_rad)
             Vec({0, 0, 0, 1})};
 }
 
-Mat RYM(float ang_rad)
+Mat RYM(double ang_rad)
 {
     return {
         Vec({cos(ang_rad), 0, sin(ang_rad), 0}),
@@ -18,7 +44,7 @@ Mat RYM(float ang_rad)
         Vec({0, 0, 0, 1})};
 }
 
-Mat RZM(float ang_rad)
+Mat RZM(double ang_rad)
 {
     return {
         Vec({cos(ang_rad), -sin(ang_rad), 0, 0}),
@@ -27,7 +53,7 @@ Mat RZM(float ang_rad)
         Vec({0, 0, 0, 1})};
 }
 
-Mat TXM(float dist_in_mm)
+Mat TXM(double dist_in_mm)
 {
 
     return {Vec({1, 0, 0, dist_in_mm}),
@@ -36,7 +62,7 @@ Mat TXM(float dist_in_mm)
             Vec({0, 0, 0, 1})};
 }
 
-Mat TYM(float dist_in_mm)
+Mat TYM(double dist_in_mm)
 {
 
     return {
@@ -46,7 +72,7 @@ Mat TYM(float dist_in_mm)
         Vec({0, 0, 0, 1})};
 }
 
-Mat TZM(float dist_in_mm)
+Mat TZM(double dist_in_mm)
 {
 
     return {Vec({1, 0, 0, 0}),
@@ -57,6 +83,7 @@ Mat TZM(float dist_in_mm)
 
 Mat forward(Ang ang_rad)
 {
+
     return IDEN *
            RZM(ang_rad[0]) * TZM(links[0]) *
            RYM(ang_rad[1]) * TZM(links[1]) *
@@ -142,28 +169,28 @@ Mat getMat(const Position &pos)
     return ans * (RZM(pos.yaw) * RYM(pos.pitch) * RXM(pos.roll));
 }
 
-float dist(const Position &a, const Position &b)
+double dist(const Position &a, const Position &b)
 {
     return (a.x - b.x) * (a.x - b.x) +
            (a.y - b.y) * (a.y - b.y) +
            (a.z - b.z) * (a.z - b.z);
 }
 
-float dist(const Position &a, const Mat &b)
+double dist(const Position &a, const Mat &b)
 {
     return (a.x - b[0][3]) * (a.x - b[0][3]) +
            (a.y - b[1][3]) * (a.y - b[1][3]) +
            (a.z - b[2][3]) * (a.z - b[2][3]);
 }
 
-float dist(const Mat &a, const Mat &b)
+double dist(const Mat &a, const Mat &b)
 {
     return (a[0][3] - b[0][3]) * (a[0][3] - b[0][3]) +
            (a[1][3] - b[1][3]) * (a[1][3] - b[1][3]) +
            (a[2][3] - b[2][3]) * (a[2][3] - b[2][3]);
 }
 
-float to_deg(float a)
+double to_deg(double a)
 {
     return a * 180 / M_PI;
 }
@@ -173,23 +200,23 @@ void iterate(
     Position &starting_pos,
 
     Ang &starting_ang,
-    float first_ind,
-    float last_ind,
-    float inc_ind)
+    double first_ind,
+    double last_ind,
+    double inc_ind)
 {
 
     Ang ans = starting_ang;
-    float d = dist(target_pos, starting_pos);
+    double d = dist(target_pos, starting_pos);
 
-    for (float i1 = first_ind; i1 <= last_ind; i1 += inc_ind)
+    for (double i1 = first_ind; i1 <= last_ind; i1 += inc_ind)
     {
-        for (float i2 = first_ind; i2 <= last_ind; i2 += inc_ind)
+        for (double i2 = first_ind; i2 <= last_ind; i2 += inc_ind)
         {
-            for (float i3 = first_ind; i3 <= last_ind; i3 += inc_ind)
+            for (double i3 = first_ind; i3 <= last_ind; i3 += inc_ind)
             {
-                for (float i4 = first_ind; i4 <= last_ind; i4 += inc_ind)
+                for (double i4 = first_ind; i4 <= last_ind; i4 += inc_ind)
                 {
-                    for (float i5 = first_ind; i5 <= last_ind; i5 += inc_ind)
+                    for (double i5 = first_ind; i5 <= last_ind; i5 += inc_ind)
                     {
                         Ang new_ang = starting_ang;
                         new_ang[0] += i1;
@@ -219,17 +246,17 @@ void iterates(
     Position &starting_pos,
 
     Ang &starting_ang,
-    float first_ind,
-    float last_ind,
-    float inc_ind)
+    double first_ind,
+    double last_ind,
+    double inc_ind)
 {
 
     Ang ans = starting_ang;
-    float d = dist(target_pos, starting_pos);
+    double d = dist(target_pos, starting_pos);
 
-    // for (float i4 = first_ind; i4 <= last_ind; i4 += inc_ind)
+    // for (double i4 = first_ind; i4 <= last_ind; i4 += inc_ind)
     //{
-    for (float i5 = first_ind; i5 <= last_ind; i5 += inc_ind)
+    for (double i5 = first_ind; i5 <= last_ind; i5 += inc_ind)
     {
         Ang new_ang = starting_ang;
         // new_ang[3] += i4;
@@ -263,11 +290,11 @@ void binary_search(
 {
 
     Ang ans = starting_ang;
-    float d = dist(target_pos, starting_pos);
-    float inc = M_PI;
+    double d = dist(target_pos, starting_pos);
+    double inc = M_PI;
     Ang l_ang, r_ang;
     Mat pl, pr;
-    float dl, dr;
+    double dl, dr;
 
     while (d > 0.5 && abs(inc) > 0.002)
     {
@@ -346,6 +373,10 @@ Mat operator*(const Mat &a, const Mat &b)
     }
 
     return res;
+}
+
+void generateForwardFunction()
+{
 }
 
 bool operator==(const Mat &a, const Mat &b)
@@ -502,15 +533,20 @@ std::vector<Ang> Robot::ik(Mat mat)
     _mat = mat;
     angels.clear();
     Ang ang;
-    recThata1(ang); 
+    recThata1(ang);
+
+    if (angels.size() == 0)
+    {
+        angels.push_back(Ang({0, 0, 0, 0, 0}));
+    }
     return angels;
 }
 
 std::vector<Ang> Robot::ik(
-    float x,
-    float y,
-    float z,
-    std::vector<std::vector<float>> target_orintation,
+    double x,
+    double y,
+    double z,
+    std::vector<std::vector<double>> target_orintation,
     OrintationMode orintationMode)
 {
     Mat mat;
@@ -545,7 +581,6 @@ std::vector<Ang> Robot::ik(
             {
                 mat[i][j] = target_orintation[i][j];
             }
-            
         }
         break;
 
