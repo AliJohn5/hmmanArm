@@ -1,14 +1,16 @@
 #include <hummanArm/math.hpp>
 #include <random>
+#include <set>
 
 int main()
 {
     std::cout << "starting read" << std::endl;
     freopen("../outin/inverse_test.txt", "r", stdin);
-    int n = 100000;
+    int n = 1000000;
     std::cin >> n;
 
     Robot r;
+    std::set<int> cnt;
 
     double d = 0;
     int err = 0;
@@ -31,10 +33,23 @@ int main()
 
         Position target = getPosition(a);
 
-        Ang new_ang = r.ik(a)[0];
+        std::vector<Ang> kk = r.ik(a);
+        cnt.insert(kk.size());
+
+        Ang new_ang = kk[0];
         Mat new_p = r.fk(new_ang);
 
-        Position reah = getPosition(new_p);
+        int s1 = r.strings.size();
+        r.strings.insert("22220");
+        r.strings.insert("23220");
+
+        if (s1 != r.strings.size())
+        {
+            std::cout << r.strings.size() << '\n';
+            exit(0);
+        }
+
+               Position reah = getPosition(new_p);
         d = std::max(d, dist(target, reah));
 
         for (auto &aa : new_ang)
@@ -77,6 +92,7 @@ int main()
 
     std::cout << "ERRORS are: " << err << '\n';
     std::cout << "max ERROR is: " << d << '\n';
+    std::cout << cnt.size() << '\n';
 
     return 0;
 }

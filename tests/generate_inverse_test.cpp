@@ -9,7 +9,7 @@ int main()
     Robot r;
     srand(time(0));
     freopen("../outin/inverse_test.txt", "w", stdout);
-    int n = 10000;
+    int n = 100000;
     std::cout << n << '\n';
 
     for (size_t i = 0; i < n; i++)

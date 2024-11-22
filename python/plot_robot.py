@@ -6,7 +6,7 @@ from robot import get_position_and_rotation
 
 
 
-fk_solution = [0,0,710]
+fk_solution = [200,200,100]
 ori = [0,0,0]
 s = [2.9361 ,-1.10791, 2.55291, -3.11372, 2.71204, 0]
 
@@ -16,10 +16,10 @@ target_or = [
     [-0.319699, -0.938521, 0.130273 ],
     [-0.576833, 0.083704, -0.812562 ],
     ]
-target = [-395.192,83.2015,43.1121]
+target =[200,200,100]
 
 
-ik_solution = robot_chain.inverse_kinematics(target,target_orientation=target_or,orientation_mode='all')
+ik_solution = robot_chain.inverse_kinematics(target)
 
 fk = robot_chain.forward_kinematics(ik_solution)
 

@@ -14,7 +14,7 @@ int main()
 
     while (microsec < 1000000)
     {
-        Mat ik = r.fk(Ang({0, 0, 0, 0, 0}));
+        Mat ik = forward(Ang({0, 0, 0, 0, 0}));
         ++i;
 
         finish = std::chrono::high_resolution_clock::now();
@@ -29,7 +29,31 @@ int main()
     {
         std::cout << x << " ";
     }*/
-    std::cout << i << " per second\n";
+    std::cout << i << " per second using matrices\n";
+
+    start = std::chrono::high_resolution_clock::now();
+    finish = std::chrono::high_resolution_clock::now();
+    microsec = std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
+    i = 0;
+
+    while (microsec < 1000000)
+    {
+        Mat ik = forwardUsingEquations(Ang({0, 0, 0, 0, 0}));
+        ++i;
+
+        finish = std::chrono::high_resolution_clock::now();
+        microsec = std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
+    }
+
+    // Mat fk = r.fk(ik);
+
+    // Position pos = getPosition(fk);
+
+    /*for (auto &x : ik)
+    {
+        std::cout << x << " ";
+    }*/
+    std::cout << i << " per second using equations\n";
 
     // printMat(fk);
     // printPos(pos);

@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 #include "hummanArm/debug.hpp"
+#include <map>
+#include <set>
 
 Mat operator*(const Mat &a, const Mat &b);
 bool operator==(const Mat &a, const Mat &b);
@@ -51,8 +53,7 @@ void Best(
 double dist(const Position &a, const Position &b);
 double dist(const Position &a, const Mat &b);
 double dist(const Mat &a, const Mat &b);
-
-void generateForwardFunction();
+double distWithDir(const Mat &a, const Mat &b);
 
 struct Node
 {
@@ -71,17 +72,20 @@ class Robot
     int max_y = 700;
     int max_z = 700;
     std::vector<Ang> angels;
+    std::vector<Mat> angelsForward;
+
     Mat _mat, _mat4, _mat2, _d, ans;
     double _r, _s;
 
-    void recThata1(Ang &ang);
-    void recThata2(Ang &ang);
-    void recThata3(Ang &ang);
-    void recThata4(Ang &ang);
-    void recThata5(Ang &ang);
+    void recThata1(Ang &ang,std::string);
+    void recThata2(Ang &ang,std::string);
+    void recThata3(Ang &ang,std::string);
+    void recThata4(Ang &ang,std::string);
+    void recThata5(Ang &ang,std::string);
 
 public:
     Robot();
+    std::set<std::string> strings;
     Mat fk(Ang ang);
     std::vector<Ang> ik(Mat mat);
     std::vector<Ang> ik(
@@ -90,6 +94,14 @@ public:
         double z,
         std::vector<std::vector<double>> target_orintation,
         OrintationMode orintationMode);
+    Ang IKNearAng(
+        double x,
+        double y,
+        double z,
+        std::vector<std::vector<double>> target_orintation,
+        OrintationMode orintationMode);
 };
 
+Mat forwardUsingEquations(Ang ang_rad);
+void forwardUsingEquations3(Ang ang_rad, Mat &ans);
 #endif

@@ -7,7 +7,6 @@
 
 
 typedef std::array<double, 5> Ang;
-
 typedef std::array<double, 4> Vec;
 typedef std::array<Vec, 4> Mat;
 
