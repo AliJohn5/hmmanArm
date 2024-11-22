@@ -33,13 +33,15 @@ int main()
 
         Position target = getPosition(a);
 
-        std::vector<Ang> kk = r.ik(a);
+        std::vector<Ang> kk = inverseUsingEquations(a);
+        std::vector<Ang> kk1 = r.ik(a);
+
         cnt.insert(kk.size());
 
         Ang new_ang = kk[0];
         Mat new_p = r.fk(new_ang);
 
-        int s1 = r.strings.size();
+        /*int s1 = r.strings.size();
         r.strings.insert("22220");
         r.strings.insert("23220");
 
@@ -47,9 +49,9 @@ int main()
         {
             std::cout << r.strings.size() << '\n';
             exit(0);
-        }
+        }*/
 
-               Position reah = getPosition(new_p);
+        Position reah = getPosition(new_p);
         d = std::max(d, dist(target, reah));
 
         for (auto &aa : new_ang)
@@ -78,6 +80,11 @@ int main()
             for (auto &a : new_ang)
                 std::cout << a << " ";
             std::cout << '\n';
+
+            for (auto &a : kk1[0])
+                std::cout << a << " ";
+            std::cout << '\n';
+
             std::cout << '\n';
             printMat(new_p);
             std::cout << '\n';

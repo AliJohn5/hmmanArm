@@ -65,6 +65,12 @@ std::string atan2S(std::string a, std::string b)
     return "atan2(" + a + "," + b + ")";
 }
 
+std::string sqrtS(std::string ang)
+{
+    strip(ang);
+    return "sqrt(" + ang + ")";
+}
+
 MatS RXMS(std::string ang_rad)
 {
     return {
@@ -248,6 +254,35 @@ MatS generateForwardEquations(bool isprinted, int dof)
                 std::cout << "\tR" << std::to_string(i) << std::to_string(j) << " =\t" << forward[i][j] << ";\n\n";
             }
         }
+    }
+
+    return forward;
+}
+
+MatS generateForwardEquations(std::vector<std::string> ang)
+{
+    MatS forward = IDENS;
+    int dof = ang.size();
+
+    if (dof > 0)
+    {
+        forward = forward * RZMS(ang[0]) * TZMS(linksS[0]);
+    }
+    if (dof > 1)
+    {
+        forward = forward * RYMS(ang[1]) * TZMS(linksS[1]);
+    }
+    if (dof > 2)
+    {
+        forward = forward * RYMS(ang[2]) * TZMS(linksS[2]);
+    }
+    if (dof > 3)
+    {
+        forward = forward * RZMS(ang[3]) * TZMS(linksS[3]);
+    }
+    if (dof > 4)
+    {
+        forward = forward * RYMS(ang[4]) * TZMS(linksS[4]);
     }
 
     return forward;

@@ -10,6 +10,9 @@
 #include <map>
 #include <set>
 
+
+#define DEBUGER_ALI
+
 Mat operator*(const Mat &a, const Mat &b);
 bool operator==(const Mat &a, const Mat &b);
 
@@ -104,4 +107,7 @@ public:
 
 Mat forwardUsingEquations(Ang ang_rad);
 void forwardUsingEquations3(Ang ang_rad, Mat &ans);
+std::vector<Ang> inverseUsingEquations(Mat mat);
+
+void testAnyThingHere();
 #endif

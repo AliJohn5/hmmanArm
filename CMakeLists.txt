@@ -51,6 +51,7 @@ add_executable(forward_str tests/forward_str.cpp)
 add_executable(strip_test tests/strip_test.cpp)
 add_executable(generateForwardEquations tests/generateForwardEquations.cpp)
 add_executable(forwardUsingEquations_test tests/forwardUsingEquations_test.cpp)
+add_executable(anyThing tests/anyThing.cpp)
 
 
 # Link tests to the hummanArm library and other necessary libraries
@@ -64,6 +65,7 @@ target_link_libraries(forward_str hummanArm stdc++)
 target_link_libraries(strip_test hummanArm stdc++)
 target_link_libraries(generateForwardEquations hummanArm stdc++)
 target_link_libraries(forwardUsingEquations_test hummanArm stdc++)
+target_link_libraries(anyThing hummanArm stdc++)
 
 # Register tests
 add_test(NAME hello_world_test COMMAND hello_world_test)
@@ -75,3 +77,4 @@ add_test(NAME forward_str COMMAND forward_str)
 add_test(NAME strip_test COMMAND strip_test)
 add_test(NAME generateForwardEquations COMMAND generateForwardEquations)
 add_test(NAME forwardUsingEquations_test COMMAND forwardUsingEquations_test)
+add_test(NAME anyThing COMMAND anyThing)

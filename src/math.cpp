@@ -1,5 +1,6 @@
 
 #include "hummanArm/math.hpp"
+#include "hummanArm/sympole.hpp"
 
 Mat RTXM(double ang_rad, double dist_in_mm)
 {
@@ -509,7 +510,7 @@ void Robot::recThata2(Ang &ang, std::string s)
                        atan2(_s, _r));
 
     recThata4(ang, s + "2");
-    
+
     /**
         if (std::isnan(ang[1]))
         {
@@ -582,6 +583,9 @@ void Robot::recThata5(Ang &ang, std::string s)
 
 std::vector<Ang> Robot::ik(Mat mat)
 {
+#ifndef DEBUGER_ALI
+    return inverseUsingEquations(mat);
+#endif
     _mat = mat;
     angels.clear();
     angelsForward.clear();
@@ -648,7 +652,7 @@ std::vector<Ang> Robot::ik(
     mat[1][3] = y;
     mat[2][3] = z;
 
-    return ik(mat);
+    return inverseUsingEquations(mat);
 }
 
 Ang Robot::IKNearAng(
@@ -658,6 +662,7 @@ Ang Robot::IKNearAng(
     std::vector<std::vector<double>> target_orintation,
     OrintationMode orintationMode)
 {
+    // TODO: this need some works
     ik(x, y, z, target_orintation, orintationMode);
 
     std::map<double, Ang> m;
@@ -699,4 +704,99 @@ Mat forwardUsingEquations(Ang ang_rad)
     ans[3][2] = 0;
     ans[3][3] = 1;
     return ans;
+}
+
+std::vector<Ang> inverseUsingEquations(Mat mat)
+{
+    std::vector<Ang> ans(2);
+    ans[0][0] = ans[1][0] = atan2(((mat[1][2] * -70) + mat[1][3]), ((mat[0][2] * -70) + mat[0][3]));
+
+    ans[0][2] = acos(((((sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3])))) * sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3]))))) + ((((mat[2][2] * -70) + mat[2][3]) - 66.5) * (((mat[2][2] * -70) + mat[2][3]) - 66.5))) - (238.000000 * 238.000000) - 112761.640000) / (2 * 238.000000 * 335.800000)));
+
+    ans[1][2] = -acos(((((sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3])))) * sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3]))))) + ((((mat[2][2] * -70) + mat[2][3]) - 66.5) * (((mat[2][2] * -70) + mat[2][3]) - 66.5))) - (238.000000 * 238.000000) - 112761.640000) / (2 * 238.000000 * 335.800000)));
+
+    ans[0][1] = M_PI_2 - (asin((238.000000 * sin(M_PI - ans[0][2])) / sqrt(((((mat[2][2] * -70) + mat[2][3]) - 66.5) * (((mat[2][2] * -70) + mat[2][3]) - 66.5)) + (sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3])))) * sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3]))))))) + atan2((((mat[2][2] * -70) + mat[2][3]) - 66.5), sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3]))))));
+
+    ans[1][1] = M_PI_2 - (asin((238.000000 * sin(M_PI - ans[1][2])) / sqrt(((((mat[2][2] * -70) + mat[2][3]) - 66.5) * (((mat[2][2] * -70) + mat[2][3]) - 66.5)) + (sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3])))) * sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3]))))))) + atan2((((mat[2][2] * -70) + mat[2][3]) - 66.5), sqrt(((((mat[0][2] * -70) + mat[0][3]) * ((mat[0][2] * -70) + mat[0][3])) + (((mat[1][2] * -70) + mat[1][3]) * ((mat[1][2] * -70) + mat[1][3]))))));
+
+    ans[0][3] = atan2((((-sin(ans[0][0]) * mat[0][2]) + (cos(ans[0][0]) * mat[1][2])) + ((((((sin(ans[0][0]) * cos(ans[0][1])) * sin(ans[0][2])) + ((sin(ans[0][0]) * sin(ans[0][1])) * cos(ans[0][2]))) * 183) + ((sin(ans[0][0]) * sin(ans[0][1])) * 335.8)) * mat[3][2])), (((((((cos(ans[0][0]) * cos(ans[0][1])) * cos(ans[0][2])) + ((cos(ans[0][0]) * sin(ans[0][1])) * -sin(ans[0][2]))) * mat[0][2]) + ((((sin(ans[0][0]) * cos(ans[0][1])) * cos(ans[0][2])) + ((sin(ans[0][0]) * sin(ans[0][1])) * -sin(ans[0][2]))) * mat[1][2])) + (((-sin(ans[0][1]) * cos(ans[0][2])) + (cos(ans[0][1]) * -sin(ans[0][2]))) * mat[2][2])) + ((((((cos(ans[0][0]) * cos(ans[0][1])) * sin(ans[0][2])) + ((cos(ans[0][0]) * sin(ans[0][1])) * cos(ans[0][2]))) * 183) + ((cos(ans[0][0]) * sin(ans[0][1])) * 335.8)) * mat[3][2])));
+
+    ans[1][3] = atan2((((-sin(ans[1][0]) * mat[0][2]) + (cos(ans[1][0]) * mat[1][2])) + ((((((sin(ans[1][0]) * cos(ans[1][1])) * sin(ans[1][2])) + ((sin(ans[1][0]) * sin(ans[1][1])) * cos(ans[1][2]))) * 183) + ((sin(ans[1][0]) * sin(ans[1][1])) * 335.8)) * mat[3][2])), (((((((cos(ans[1][0]) * cos(ans[1][1])) * cos(ans[1][2])) + ((cos(ans[1][0]) * sin(ans[1][1])) * -sin(ans[1][2]))) * mat[0][2]) + ((((sin(ans[1][0]) * cos(ans[1][1])) * cos(ans[1][2])) + ((sin(ans[1][0]) * sin(ans[1][1])) * -sin(ans[1][2]))) * mat[1][2])) + (((-sin(ans[1][1]) * cos(ans[1][2])) + (cos(ans[1][1]) * -sin(ans[1][2]))) * mat[2][2])) + ((((((cos(ans[1][0]) * cos(ans[1][1])) * sin(ans[1][2])) + ((cos(ans[1][0]) * sin(ans[1][1])) * cos(ans[1][2]))) * 183) + ((cos(ans[1][0]) * sin(ans[1][1])) * 335.8)) * mat[3][2])));
+
+    ans[0][4] = acos((((((((cos(ans[0][0]) * cos(ans[0][1])) * sin(ans[0][2])) + ((cos(ans[0][0]) * sin(ans[0][1])) * cos(ans[0][2]))) * mat[0][2]) + ((((sin(ans[0][0]) * cos(ans[0][1])) * sin(ans[0][2])) + ((sin(ans[0][0]) * sin(ans[0][1])) * cos(ans[0][2]))) * mat[1][2])) + (((-sin(ans[0][1]) * sin(ans[0][2])) + (cos(ans[0][1]) * cos(ans[0][2]))) * mat[2][2])) + (((((-sin(ans[0][1]) * sin(ans[0][2])) + (cos(ans[0][1]) * cos(ans[0][2]))) * 183) + ((cos(ans[0][1]) * 335.8) + 66.5)) * mat[3][2])));
+
+    ans[1][4] = acos((((((((cos(ans[1][0]) * cos(ans[1][1])) * sin(ans[1][2])) + ((cos(ans[1][0]) * sin(ans[1][1])) * cos(ans[1][2]))) * mat[0][2]) + ((((sin(ans[1][0]) * cos(ans[1][1])) * sin(ans[1][2])) + ((sin(ans[1][0]) * sin(ans[1][1])) * cos(ans[1][2]))) * mat[1][2])) + (((-sin(ans[1][1]) * sin(ans[1][2])) + (cos(ans[1][1]) * cos(ans[1][2]))) * mat[2][2])) + (((((-sin(ans[1][1]) * sin(ans[1][2])) + (cos(ans[1][1]) * cos(ans[1][2]))) * 183) + ((cos(ans[1][1]) * 335.8) + 66.5)) * mat[3][2])));
+
+    return ans;
+}
+
+void testAnyThingHere()
+{
+    MatS mat = {
+        VecS({"mat[0][0]", "mat[0][1]", "mat[0][2]", "mat[0][3]"}),
+        VecS({"mat[1][0]", "mat[1][1]", "mat[1][2]", "mat[1][3]"}),
+        VecS({"mat[2][0]", "mat[2][1]", "mat[2][2]", "mat[2][3]"}),
+        VecS({"mat[3][0]", "mat[3][1]", "mat[3][2]", "mat[3][3]"})};
+
+    MatS mat4 = mat * TZMS("-" + linksS[4]);
+    std::string s = "std::vector<Ang> inverseUsingEquations(Mat mat)\n{\n\tstd::vector<Ang> ans(2);\n";
+
+    s += "\tans[0][0] = ans[1][0] = " + atan2S(mat4[1][3], mat4[0][3]) + ";\n\n";
+
+    std::string h1 = prodTwoString(mat4[0][3], mat4[0][3]);
+    std::string h2 = prodTwoString(mat4[1][3], mat4[1][3]);
+    std::string h3 = sumTwoString(h1, h2);
+    std::string _r = sqrtS(h3);
+    std::string _s = "(" + mat4[2][3] + "-" + linksS[0] + ")";
+
+    std::string a11 = std::to_string(links[2] + links[3]);
+    std::string a21 = std::to_string(links[1] * links[1]);
+    std::string a31 = std::to_string(links[1]);
+    std::string a41 = prodTwoString(_r, _r);
+    std::string a51 = prodTwoString(_s, _s);
+    std::string a61 = prodTwoString(a11, a11);
+    std::string a71 = sumTwoString(a41, a51);
+    std::string a81 = "(" + a71 + "-" + a61 + "-" + a21 + ")";
+
+    std::string a91 = "(2*" + a11 + "*" + a31 + ")";
+    std::string a110 = "(" + a81 + "/" + a91 + ")";
+
+    s += "\tans[0][2] = " + acosS(a110) + ";\n\n";
+    s += "\tans[1][2] = -" + acosS(a110) + ";\n\n";
+
+    std::string b01 = sinS("M_PI-ans[0][2]");
+    std::string b11 = sinS("M_PI-ans[1][2]");
+    std::string b03 = atan2S(_s, _r);
+    std::string b04 = sqrtS(a51 + "+" + a41);
+
+    std::string b05 = "(" + asinS("(" + a11 + "*" + b01 + ")/" + b04) + "+" + b03 + ")";
+    std::string b06 = "(" + asinS("(" + a11 + "*" + b11 + ")/" + b04) + "+" + b03 + ")";
+
+    s += "\tans[0][1] = M_PI_2-" + b05 + ";\n\n";
+
+    s += "\tans[1][1] = M_PI_2-" + b06 + ";\n\n";
+
+    MatS _mat20 = generateForwardEquations({"ans[0][0]", "ans[0][1]", "ans[0][2]"});
+    MatS _mat21 = generateForwardEquations({"ans[1][0]", "ans[1][1]", "ans[1][2]"});
+
+    std::swap(_mat20[1][0], _mat20[0][1]);
+    std::swap(_mat20[2][0], _mat20[0][2]);
+    std::swap(_mat20[1][2], _mat20[2][1]);
+
+    std::swap(_mat21[1][0], _mat21[0][1]);
+    std::swap(_mat21[2][0], _mat21[0][2]);
+    std::swap(_mat21[1][2], _mat21[2][1]);
+
+    MatS _d1 = _mat20 * mat4;
+    MatS _d2 = _mat21 * mat4;
+
+    s += "\tans[0][3]=" + atan2S(_d1[1][2], _d1[0][2]) + ";\n\n";
+    s += "\tans[1][3]=" + atan2S(_d2[1][2], _d2[0][2]) + ";\n\n";
+
+    s += "\tans[0][4]=" + acosS(_d1[2][2]) + ";\n\n";
+    s += "\tans[1][4]=" + acosS(_d2[2][2]) + ";\n\n";
+
+    s += "\treturn ans;\n}";
+    if (isValidEquationsPrctice(s))
+        std::cout << s << '\n';
 }

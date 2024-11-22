@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <array>
+#include <vector>
 
 
 void strip(std::string &_s);
@@ -36,10 +37,14 @@ std::string cosS(std::string ang);
 std::string tanS(std::string ang);
 std::string asinS(std::string ang);
 std::string acosS(std::string ang);
+std::string sqrtS(std::string ang);
+
 std::string atan2S(std::string a, std::string b);
 
 MatS generateForwardEquations(bool isprinted,int dof);
 std::string generateForwardEquationsFunction(int dof);
+
+MatS generateForwardEquations(std::vector<std::string> ang);
 
 bool isValidEquationsPrctice(const std::string& eq);
 
