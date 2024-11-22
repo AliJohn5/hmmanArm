@@ -30,3 +30,11 @@ cmake -G "MinGW Makefiles" ..
 cmake --build .
 cmake --install .
 ```
+
+## for testing, install some python packages:
+
+```
+pip3 install numpy ikpy 'ikpy[plot]'
+```
+
+# for docs see /tests dir.
