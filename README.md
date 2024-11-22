@@ -5,13 +5,13 @@
 c++ library for kinematics (forward and inverse) for 5 DOF robotics arm,
 and python simulation for the robot
 
-### requirements:
+## requirements:
 
-### cmake (add it to path in environoment variables for windows)
+## cmake (add it to path in environoment variables for windows)
 
-### gcc compiler in "C:/msys64/ucrt64/bin/gcc.exe" (for windows only), or set it in CMakeLists.txt
+## gcc compiler in "C:/msys64/ucrt64/bin/gcc.exe" (for windows only), or set it in CMakeLists.txt
 
-### for linux build:
+## for linux build:
 
 ```
 mkdir build && cd build
@@ -20,7 +20,7 @@ make
 sudo make install
 ```
 
-### for windows build:
+## for windows build:
 
 open terminal as administrator, go to the repo directory and run:
 
