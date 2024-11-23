@@ -5,7 +5,7 @@
 #include <string>
 #include <array>
 #include <vector>
-
+#include "hummanArm/debug.hpp"
 
 void strip(std::string &_s);
 const std::string linksS[5] = {"66.5", "335.8", "183", "55", "70"};
@@ -45,6 +45,7 @@ MatS generateForwardEquations(bool isprinted,int dof);
 std::string generateForwardEquationsFunction(int dof);
 
 MatS generateForwardEquations(std::vector<std::string> ang);
+std::string generateInverseEquationsFunction();
 
 bool isValidEquationsPrctice(const std::string& eq);
 

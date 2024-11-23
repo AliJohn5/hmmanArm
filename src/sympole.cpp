@@ -220,23 +220,23 @@ MatS generateForwardEquations(bool isprinted, int dof)
 
     if (dof > 0)
     {
-        forward = forward * RZMS("theta0") * TZMS(linksS[0]);
+        forward = forward * RZMS("theta0") * TZMS("links[0]");
     }
     if (dof > 1)
     {
-        forward = forward * RYMS("theta1") * TZMS(linksS[1]);
+        forward = forward * RYMS("theta1") * TZMS("links[1]");
     }
     if (dof > 2)
     {
-        forward = forward * RYMS("theta2") * TZMS(linksS[2]);
+        forward = forward * RYMS("theta2") * TZMS("links[2]");
     }
     if (dof > 3)
     {
-        forward = forward * RZMS("theta3") * TZMS(linksS[3]);
+        forward = forward * RZMS("theta3") * TZMS("links[3]");
     }
     if (dof > 4)
     {
-        forward = forward * RYMS("theta4") * TZMS(linksS[4]);
+        forward = forward * RYMS("theta4") * TZMS("links[4]");
     }
 
     if (isprinted)
@@ -266,23 +266,23 @@ MatS generateForwardEquations(std::vector<std::string> ang)
 
     if (dof > 0)
     {
-        forward = forward * RZMS(ang[0]) * TZMS(linksS[0]);
+        forward = forward * RZMS(ang[0]) * TZMS("links[0]");
     }
     if (dof > 1)
     {
-        forward = forward * RYMS(ang[1]) * TZMS(linksS[1]);
+        forward = forward * RYMS(ang[1]) * TZMS("links[1]");
     }
     if (dof > 2)
     {
-        forward = forward * RYMS(ang[2]) * TZMS(linksS[2]);
+        forward = forward * RYMS(ang[2]) * TZMS("links[2]");
     }
     if (dof > 3)
     {
-        forward = forward * RZMS(ang[3]) * TZMS(linksS[3]);
+        forward = forward * RZMS(ang[3]) * TZMS("links[3]");
     }
     if (dof > 4)
     {
-        forward = forward * RYMS(ang[4]) * TZMS(linksS[4]);
+        forward = forward * RYMS(ang[4]) * TZMS("links[4]");
     }
 
     return forward;
@@ -359,6 +359,78 @@ std::string generateForwardEquationsFunction(int dof)
     return "ERROR";
 }
 
+std::string generateInverseEquationsFunction()
+{
+    MatS mat = {
+        VecS({"mat[0][0]", "mat[0][1]", "mat[0][2]", "mat[0][3]"}),
+        VecS({"mat[1][0]", "mat[1][1]", "mat[1][2]", "mat[1][3]"}),
+        VecS({"mat[2][0]", "mat[2][1]", "mat[2][2]", "mat[2][3]"}),
+        VecS({"mat[3][0]", "mat[3][1]", "mat[3][2]", "mat[3][3]"})};
+
+    MatS mat4 = mat * TZMS("-" + linksS[4]);
+    std::string s = "std::vector<Ang> inverseUsingEquations(Mat mat)\n{\n\tstd::vector<Ang> ans(2);\n";
+
+    s += "\tans[0][0] = ans[1][0] = " + atan2S(mat4[1][3], mat4[0][3]) + ";\n\n";
+
+    std::string h1 = prodTwoString(mat4[0][3], mat4[0][3]);
+    std::string h2 = prodTwoString(mat4[1][3], mat4[1][3]);
+    std::string h3 = sumTwoString(h1, h2);
+    std::string _r = sqrtS(h3);
+    std::string _s = "(" + mat4[2][3] + "-links[0])";
+
+    std::string a11 = "(links[2]+links[3])";
+    std::string a21 = "(links[1]*links[1])";
+    std::string a31 = "(links[1])";
+    std::string a41 = prodTwoString(_r, _r);
+    std::string a51 = prodTwoString(_s, _s);
+    std::string a61 = prodTwoString(a11, a11);
+    std::string a71 = sumTwoString(a41, a51);
+    std::string a81 = "(" + a71 + "-" + a61 + "-" + a21 + ")";
+
+    std::string a91 = "(2*" + a11 + "*" + a31 + ")";
+    std::string a110 = "(" + a81 + "/" + a91 + ")";
+
+    s += "\tans[0][2] = " + acosS(a110) + ";\n\n";
+    s += "\tans[1][2] = -" + acosS(a110) + ";\n\n";
+
+    std::string b01 = sinS("M_PI-ans[0][2]");
+    std::string b11 = sinS("M_PI-ans[1][2]");
+    std::string b03 = atan2S(_s, _r);
+    std::string b04 = sqrtS(a51 + "+" + a41);
+
+    std::string b05 = "(" + asinS("(" + a11 + "*" + b01 + ")/" + b04) + "+" + b03 + ")";
+    std::string b06 = "(" + asinS("(" + a11 + "*" + b11 + ")/" + b04) + "+" + b03 + ")";
+
+    s += "\tans[0][1] = M_PI_2-" + b05 + ";\n\n";
+
+    s += "\tans[1][1] = M_PI_2-" + b06 + ";\n\n";
+
+    MatS _mat20 = generateForwardEquations({"ans[0][0]", "ans[0][1]", "ans[0][2]"});
+    MatS _mat21 = generateForwardEquations({"ans[1][0]", "ans[1][1]", "ans[1][2]"});
+
+    std::swap(_mat20[1][0], _mat20[0][1]);
+    std::swap(_mat20[2][0], _mat20[0][2]);
+    std::swap(_mat20[1][2], _mat20[2][1]);
+
+    std::swap(_mat21[1][0], _mat21[0][1]);
+    std::swap(_mat21[2][0], _mat21[0][2]);
+    std::swap(_mat21[1][2], _mat21[2][1]);
+
+    MatS _d1 = _mat20 * mat4;
+    MatS _d2 = _mat21 * mat4;
+
+    s += "\tans[0][3]=" + atan2S(_d1[1][2], _d1[0][2]) + ";\n\n";
+    s += "\tans[1][3]=" + atan2S(_d2[1][2], _d2[0][2]) + ";\n\n";
+
+    s += "\tans[0][4]=" + acosS(_d1[2][2]) + ";\n\n";
+    s += "\tans[1][4]=" + acosS(_d2[2][2]) + ";\n\n";
+
+    s += "\treturn ans;\n}";
+    if (isValidEquationsPrctice(s))
+        return s;
+    else
+        return "ERROR";
+}
 /*
 
 

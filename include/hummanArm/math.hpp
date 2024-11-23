@@ -6,12 +6,11 @@
 #include <math.h>
 #include <iostream>
 #include <fstream>
+#include "hummanArm/sympole.hpp"
 #include "hummanArm/debug.hpp"
 #include <map>
 #include <set>
 
-
-#define DEBUGER_ALI
 
 Mat operator*(const Mat &a, const Mat &b);
 bool operator==(const Mat &a, const Mat &b);
@@ -80,11 +79,11 @@ class Robot
     Mat _mat, _mat4, _mat2, _d, ans;
     double _r, _s;
 
-    void recThata1(Ang &ang,std::string);
-    void recThata2(Ang &ang,std::string);
-    void recThata3(Ang &ang,std::string);
-    void recThata4(Ang &ang,std::string);
-    void recThata5(Ang &ang,std::string);
+    void recThata1(Ang &ang, std::string);
+    void recThata2(Ang &ang, std::string);
+    void recThata3(Ang &ang, std::string);
+    void recThata4(Ang &ang, std::string);
+    void recThata5(Ang &ang, std::string);
 
 public:
     Robot();
