@@ -10,7 +10,7 @@
 #include "hummanArm/debug.hpp"
 #include <map>
 #include <set>
-
+#include <Eigen/Dense>
 
 Mat operator*(const Mat &a, const Mat &b);
 bool operator==(const Mat &a, const Mat &b);
@@ -107,6 +107,11 @@ public:
 Mat forwardUsingEquations(Ang ang_rad);
 void forwardUsingEquations3(Ang ang_rad, Mat &ans);
 std::vector<Ang> inverseUsingEquations(Mat mat);
+
+Eigen::MatrixXd jacobianMatrix(Ang ang);
+
+std::vector<double> jacobianForward(std::vector<double> ang_vel, Ang current_ang);
+std::vector<double> jacobianInverse(std::vector<double> ef_vel, Ang current_ang);
 
 void testAnyThingHere();
 #endif

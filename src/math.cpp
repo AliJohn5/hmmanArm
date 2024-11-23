@@ -732,6 +732,88 @@ std::vector<Ang> inverseUsingEquations(Mat mat)
     return ans;
 }
 
+Eigen::MatrixXd jacobianMatrix(Ang ang)
+{
+    Eigen::MatrixXd j(6, 5);
+    double sinV[5];
+    double cosV[5];
+
+    for (size_t i = 0; i < 5; i++)
+    {
+        sinV[i] = sin(ang[i]);
+        cosV[i] = cos(ang[i]);
+    }
+
+    j(0, 0) = -links[1] * sinV[0] * sinV[1] + links[2] * (-sinV[0] * sinV[1] * cosV[2] - sinV[0] * sinV[2] * cosV[1]) + links[3] * (-sinV[0] * sinV[1] * cosV[2] - sinV[0] * sinV[2] * cosV[1]) + links[4] * (((sinV[0] * sinV[1] * sinV[2] - sinV[0] * cosV[1] * cosV[2]) * cosV[3] - sinV[3] * cosV[0]) * sinV[4] + (-sinV[0] * sinV[1] * cosV[2] - sinV[0] * sinV[2] * cosV[1]) * cosV[4]);
+    j(0, 1) = links[1] * cosV[0] * cosV[1] + links[2] * (-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) + links[3] * (-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) + links[4] * ((-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) * cosV[4] + (-sinV[1] * cosV[0] * cosV[2] - sinV[2] * cosV[0] * cosV[1]) * sinV[4] * cosV[3]);
+    j(0, 2) = links[2] * (-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) + links[3] * (-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) + links[4] * ((-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) * cosV[4] + (-sinV[1] * cosV[0] * cosV[2] - sinV[2] * cosV[0] * cosV[1]) * sinV[4] * cosV[3]);
+    j(0, 3) = links[4] * (-(-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) * sinV[3] - sinV[0] * cosV[3]) * sinV[4];
+    j(0, 4) = links[4] * (((-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) * cosV[3] - sinV[0] * sinV[3]) * cosV[4] - (sinV[1] * cosV[0] * cosV[2] + sinV[2] * cosV[0] * cosV[1]) * sinV[4]);
+    j(1, 0) = links[1] * sinV[1] * cosV[0] + links[2] * (sinV[1] * cosV[0] * cosV[2] + sinV[2] * cosV[0] * cosV[1]) + links[3] * (sinV[1] * cosV[0] * cosV[2] + sinV[2] * cosV[0] * cosV[1]) + links[4] * (((-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) * cosV[3] - sinV[0] * sinV[3]) * sinV[4] + (sinV[1] * cosV[0] * cosV[2] + sinV[2] * cosV[0] * cosV[1]) * cosV[4]);
+    j(1, 1) = links[1] * sinV[0] * cosV[1] + links[2] * (-sinV[0] * sinV[1] * sinV[2] + sinV[0] * cosV[1] * cosV[2]) + links[3] * (-sinV[0] * sinV[1] * sinV[2] + sinV[0] * cosV[1] * cosV[2]) + links[4] * ((-sinV[0] * sinV[1] * sinV[2] + sinV[0] * cosV[1] * cosV[2]) * cosV[4] + (-sinV[0] * sinV[1] * cosV[2] - sinV[0] * sinV[2] * cosV[1]) * sinV[4] * cosV[3]);
+    j(1, 2) = links[2] * (-sinV[0] * sinV[1] * sinV[2] + sinV[0] * cosV[1] * cosV[2]) + links[3] * (-sinV[0] * sinV[1] * sinV[2] + sinV[0] * cosV[1] * cosV[2]) + links[4] * ((-sinV[0] * sinV[1] * sinV[2] + sinV[0] * cosV[1] * cosV[2]) * cosV[4] + (-sinV[0] * sinV[1] * cosV[2] - sinV[0] * sinV[2] * cosV[1]) * sinV[4] * cosV[3]);
+    j(1, 3) = links[4] * (-(-sinV[0] * sinV[1] * sinV[2] + sinV[0] * cosV[1] * cosV[2]) * sinV[3] + cosV[0] * cosV[3]) * sinV[4];
+    j(1, 4) = links[4] * (((-sinV[0] * sinV[1] * sinV[2] + sinV[0] * cosV[1] * cosV[2]) * cosV[3] + sinV[3] * cosV[0]) * cosV[4] - (sinV[0] * sinV[1] * cosV[2] + sinV[0] * sinV[2] * cosV[1]) * sinV[4]);
+    j(2, 0) = 0;
+    j(2, 1) = -links[1] * sinV[1] + links[2] * (-sinV[1] * cosV[2] - sinV[2] * cosV[1]) + links[3] * (-sinV[1] * cosV[2] - sinV[2] * cosV[1]) + links[4] * ((sinV[1] * sinV[2] - cosV[1] * cosV[2]) * sinV[4] * cosV[3] + (-sinV[1] * cosV[2] - sinV[2] * cosV[1]) * cosV[4]);
+    j(2, 2) = links[2] * (-sinV[1] * cosV[2] - sinV[2] * cosV[1]) + links[3] * (-sinV[1] * cosV[2] - sinV[2] * cosV[1]) + links[4] * ((sinV[1] * sinV[2] - cosV[1] * cosV[2]) * sinV[4] * cosV[3] + (-sinV[1] * cosV[2] - sinV[2] * cosV[1]) * cosV[4]);
+    j(2, 3) = -links[4] * (-sinV[1] * cosV[2] - sinV[2] * cosV[1]) * sinV[3] * sinV[4];
+    j(2, 4) = links[4] * (-(-sinV[1] * sinV[2] + cosV[1] * cosV[2]) * sinV[4] + (-sinV[1] * cosV[2] - sinV[2] * cosV[1]) * cosV[3] * cosV[4]);
+    j(3, 0) = -(sinV[0] * sinV[1] * sinV[2] - sinV[0] * cosV[1] * cosV[2]) * sinV[3] - cosV[0] * cosV[3];
+    j(3, 1) = -(-sinV[1] * cosV[0] * cosV[2] - sinV[2] * cosV[0] * cosV[1]) * sinV[3];
+    j(3, 2) = -(-sinV[1] * cosV[0] * cosV[2] - sinV[2] * cosV[0] * cosV[1]) * sinV[3];
+    j(3, 3) = -(-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) * cosV[3] + sinV[0] * sinV[3];
+    j(3, 4) = 0;
+    j(4, 0) = -(-sinV[1] * sinV[2] * cosV[0] + cosV[0] * cosV[1] * cosV[2]) * sinV[3] - sinV[0] * cosV[3];
+    j(4, 1) = -(-sinV[0] * sinV[1] * cosV[2] - sinV[0] * sinV[2] * cosV[1]) * sinV[3];
+    j(4, 2) = -(-sinV[0] * sinV[1] * cosV[2] - sinV[0] * sinV[2] * cosV[1]) * sinV[3];
+    j(4, 3) = -(-sinV[0] * sinV[1] * sinV[2] + sinV[0] * cosV[1] * cosV[2]) * cosV[3] - sinV[3] * cosV[0];
+    j(4, 4) = 0;
+    j(5, 0) = 0;
+    j(5, 1) = -(sinV[1] * sinV[2] - cosV[1] * cosV[2]) * sinV[3];
+    j(5, 2) = -(sinV[1] * sinV[2] - cosV[1] * cosV[2]) * sinV[3];
+    j(5, 3) = -(-sinV[1] * cosV[2] - sinV[2] * cosV[1]) * cosV[3];
+    j(5, 4) = 0;
+
+    return j;
+}
+
+std::vector<double> jacobianForward(std::vector<double> ang_vel, Ang current_ang)
+{
+    Eigen::VectorXd ang_vel_eigen(ang_vel.size());
+    for (size_t i = 0; i < ang_vel.size(); ++i)
+    {
+        ang_vel_eigen(i) = ang_vel[i];
+    }
+
+    Eigen::MatrixXd j = jacobianMatrix(current_ang);
+
+    Eigen::VectorXd forward_vel = j * ang_vel_eigen;
+
+    std::vector<double> forward_vel_vec(forward_vel.data(), forward_vel.data() + forward_vel.size());
+
+    return forward_vel_vec;
+}
+
+std::vector<double> jacobianInverse(std::vector<double> ef_vel, Ang current_ang)
+{
+    Eigen::VectorXd ef_vel_eigen(ef_vel.size());
+    for (size_t i = 0; i < ef_vel.size(); ++i)
+    {
+        ef_vel_eigen(i) = ef_vel[i];
+    }
+
+    Eigen::MatrixXd j = jacobianMatrix(current_ang);
+
+    Eigen::MatrixXd j_inv = j.completeOrthogonalDecomposition().pseudoInverse();
+
+    Eigen::VectorXd joint_velocities = j_inv * ef_vel_eigen;
+
+    std::vector<double> joint_velocities_vec(joint_velocities.data(), joint_velocities.data() + joint_velocities.size());
+
+    return joint_velocities_vec;
+}
+
 void testAnyThingHere()
 {
     MatS mat = {

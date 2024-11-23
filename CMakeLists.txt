@@ -9,21 +9,21 @@ endif()
 # Include directories
 include_directories(include)
 
-# Define the library hummanArm
-add_library(hummanArm
-    include/hummanArm/hello_world.hpp
-    include/hummanArm/math.hpp
-    include/hummanArm/data.hpp
-    include/hummanArm/debug.hpp
-    include/hummanArm/sympole.hpp
-    include/hummanArm/all.hpp
 
+set(INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/include)
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 
-    src/hello_world.cpp
-    src/math.cpp
-    src/data.cpp
-    src/sympole.cpp
-)
+# Collect all header files (including Eigen)
+file(GLOB HEADER_FILES 
+    ${INCLUDE_DIRS}/hummanArm/*.hpp
+    ${INCLUDE_DIRS}/Eigen/*)
+
+# Collect all source files
+file(GLOB SOURCE_FILES 
+    ${SRC_DIR}/*.cpp)
+
+# Add the library with collected files
+add_library(hummanArm ${HEADER_FILES} ${SOURCE_FILES})
 
 # Link libraries (if needed, replace stdc++ with the proper library on your platform)
 target_link_libraries(hummanArm)
@@ -41,45 +41,20 @@ install(DIRECTORY include/hummanArm DESTINATION include)
 
 # Enable testing
 enable_testing()
+file(GLOB TEST_SOURCES
+    tests/*.cpp)
 
-# Add executable tests
-add_executable(hello_world_test tests/hello_world_test.cpp)
-add_executable(forward_test tests/forward_test.cpp)
-add_executable(forward_test2 tests/forward_test2.cpp)
-add_executable(inverse_test tests/inverse_test.cpp)
-add_executable(list_inverse_test tests/list_inverse_test.cpp)
-add_executable(generate_inverse_test tests/generate_inverse_test.cpp)
-add_executable(forward_str tests/forward_str.cpp)
-add_executable(strip_test tests/strip_test.cpp)
-add_executable(generateForwardEquations tests/generateForwardEquations.cpp)
-add_executable(forwardUsingEquations_test tests/forwardUsingEquations_test.cpp)
-add_executable(anyThing tests/anyThing.cpp)
-add_executable(generateInverseEquationsFunction tests/generateInverseEquationsFunction.cpp)
+# Loop over all collected test source files and create an executable for each
+foreach(TEST_FILE ${TEST_SOURCES})
+    # Extract test name from file path (just the file name without extension)
+    get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
+    # Create an executable for each test file
+    add_executable(${TEST_NAME} ${TEST_FILE})
 
-# Link tests to the hummanArm library and other necessary libraries
-target_link_libraries(hello_world_test hummanArm stdc++)
-target_link_libraries(forward_test hummanArm stdc++)
-target_link_libraries(forward_test2 hummanArm stdc++)
-target_link_libraries(inverse_test hummanArm stdc++)
-target_link_libraries(list_inverse_test hummanArm stdc++)
-target_link_libraries(generate_inverse_test hummanArm stdc++)
-target_link_libraries(forward_str hummanArm stdc++)
-target_link_libraries(strip_test hummanArm stdc++)
-target_link_libraries(generateForwardEquations hummanArm stdc++)
-target_link_libraries(forwardUsingEquations_test hummanArm stdc++)
-target_link_libraries(anyThing hummanArm stdc++)
-target_link_libraries(generateInverseEquationsFunction hummanArm stdc++)
+    # Link the test executable to the hummanArm library and other necessary libraries
+    target_link_libraries(${TEST_NAME} hummanArm stdc++)
 
-# Register tests
-add_test(NAME hello_world_test COMMAND hello_world_test)
-add_test(NAME forward_test COMMAND forward_test)
-add_test(NAME forward_test2 COMMAND forward_test2)
-add_test(NAME inverse_test COMMAND inverse_test)
-add_test(NAME generate_inverse_test COMMAND generate_inverse_test)
-add_test(NAME forward_str COMMAND forward_str)
-add_test(NAME strip_test COMMAND strip_test)
-add_test(NAME generateForwardEquations COMMAND generateForwardEquations)
-add_test(NAME forwardUsingEquations_test COMMAND forwardUsingEquations_test)
-add_test(NAME anyThing COMMAND anyThing)
-add_test(NAME generateInverseEquationsFunction COMMAND generateInverseEquationsFunction)
+    # Register the test
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+endforeach()  
