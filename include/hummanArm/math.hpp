@@ -89,6 +89,9 @@ public:
     Robot();
     std::set<std::string> strings;
     Mat fk(Ang ang);
+    std::vector<double> fj(std::vector<double> ang_vel, Ang current_ang);
+    std::vector<double> ij(std::vector<double> ef_vel, Ang current_ang);
+
     std::vector<Ang> ik(Mat mat);
     std::vector<Ang> ik(
         double x,
@@ -108,10 +111,10 @@ Mat forwardUsingEquations(Ang ang_rad);
 void forwardUsingEquations3(Ang ang_rad, Mat &ans);
 std::vector<Ang> inverseUsingEquations(Mat mat);
 
-Eigen::MatrixXd jacobianMatrix(Ang ang);
+Eigen::MatrixXd jacobianMatrix(Ang& ang);
 
-std::vector<double> jacobianForward(std::vector<double> ang_vel, Ang current_ang);
-std::vector<double> jacobianInverse(std::vector<double> ef_vel, Ang current_ang);
+std::vector<double> jacobianForward(std::vector<double>& ang_vel, Ang& current_ang);
+std::vector<double> jacobianInverse(std::vector<double>& ef_vel, Ang& current_ang);
 
 void testAnyThingHere();
 #endif

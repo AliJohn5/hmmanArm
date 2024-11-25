@@ -732,7 +732,7 @@ std::vector<Ang> inverseUsingEquations(Mat mat)
     return ans;
 }
 
-Eigen::MatrixXd jacobianMatrix(Ang ang)
+Eigen::MatrixXd jacobianMatrix(Ang& ang)
 {
     Eigen::MatrixXd j(6, 5);
     double sinV[5];
@@ -778,7 +778,7 @@ Eigen::MatrixXd jacobianMatrix(Ang ang)
     return j;
 }
 
-std::vector<double> jacobianForward(std::vector<double> ang_vel, Ang current_ang)
+std::vector<double> jacobianForward(std::vector<double>& ang_vel, Ang& current_ang)
 {
     Eigen::VectorXd ang_vel_eigen(ang_vel.size());
     for (size_t i = 0; i < ang_vel.size(); ++i)
@@ -795,7 +795,7 @@ std::vector<double> jacobianForward(std::vector<double> ang_vel, Ang current_ang
     return forward_vel_vec;
 }
 
-std::vector<double> jacobianInverse(std::vector<double> ef_vel, Ang current_ang)
+std::vector<double> jacobianInverse(std::vector<double>& ef_vel, Ang& current_ang)
 {
     Eigen::VectorXd ef_vel_eigen(ef_vel.size());
     for (size_t i = 0; i < ef_vel.size(); ++i)
@@ -812,6 +812,16 @@ std::vector<double> jacobianInverse(std::vector<double> ef_vel, Ang current_ang)
     std::vector<double> joint_velocities_vec(joint_velocities.data(), joint_velocities.data() + joint_velocities.size());
 
     return joint_velocities_vec;
+}
+
+std::vector<double> Robot::fj(std::vector<double> ang_vel, Ang current_ang)
+{
+    return jacobianForward(ang_vel, current_ang);
+}
+
+std::vector<double> Robot::ij(std::vector<double> ef_vel, Ang current_ang)
+{
+    return jacobianInverse(ef_vel, current_ang);
 }
 
 void testAnyThingHere()

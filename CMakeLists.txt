@@ -57,4 +57,4 @@ foreach(TEST_FILE ${TEST_SOURCES})
 
     # Register the test
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
-endforeach()  
+endforeach()
