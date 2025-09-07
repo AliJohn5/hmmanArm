@@ -37,4 +37,4 @@ cmake --install .
 pip3 install numpy ikpy 'ikpy[plot]'
 ```
 
-## for docs see /tests dir.
+for docs see /tests dir.
